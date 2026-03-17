@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.acg.mapper.ProductMapper">
+
+    <select id="list" resultType="org.example.acg.entity.Product">
+        SELECT * FROM product
+    </select>
+
+    <select id="getProductByName" resultType="org.example.acg.entity.Product">
+        SELECT * FROM product WHERE name = #{name}
+    </select>
+
+    <select id="listProductLikeByName" resultType="org.example.acg.entity.Product">
+        SELECT * FROM product WHERE name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    <insert id="insertProduct" parameterType="org.example.acg.entity.Product">
+        INSERT INTO product (name, introduction, price, quantity, image, createtime) VALUES (#{name}, #{introduction}, #{price}, #{quantity}, #{image}, #{createTime})
+    </insert>
+
+    <delete id="deleteProduct" >
+        DELETE FROM product WHERE id = #{id}
+    </delete>
+
+    <update id="updateProduct" >
+        UPDATE product SET name = #{name}, introduction = #{introduction}, price = #{price}, quantity = #{quantity}, image = #{image}, createtime = #{createTime} WHERE id = #{id}
+    </update>
+</mapper>

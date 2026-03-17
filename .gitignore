@@ -1,0 +1,30 @@
+# --- Maven/Java ---
+target/
+*.class
+*.log
+.mvn/
+mvnw
+mvnw.cmd
+
+# --- Node.js/Frontend ---
+node_modules/
+dist/
+build/
+package-lock.json
+*.tsbuildinfo
+
+# --- IDE (IntelliJ, VS Code) ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.DS_Store
+
+# --- Vite/Vue/React specific (根据你的 vite.config.ts 推断) --
+.vite/
+*.local
+
+# --- Others ---
+*.bak
+*.swp
