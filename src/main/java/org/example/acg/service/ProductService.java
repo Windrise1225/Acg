@@ -14,8 +14,16 @@ public class ProductService {
     @Resource
     private ProductMapper productMapper;
 
+    public void save(Product product){
+        productMapper.save(product);
+    }
+
     public List<Product> list(){
         return productMapper.list();
+    }
+
+    public Product getProductById(Integer id){
+        return productMapper.getProductById(id);
     }
 
     public Product getProductByName(String name){

@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 
 @Data
 public class User {
-    private String id;
+    private Integer id;
     private String name;
     private String sex;
     private String phone;

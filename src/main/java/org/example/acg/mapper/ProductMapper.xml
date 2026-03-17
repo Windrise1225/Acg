@@ -2,8 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.acg.mapper.ProductMapper">
 
+    <!-- 智能保存：存在则更新，不存在则插入 (MySQL 特有语法) -->
+    <insert id="save" parameterType="org.example.acg.entity.Product">
+        INSERT INTO product (name, introduction, price, quantity, image, createtime)
+        VALUES (#{name}, #{introduction}, #{price}, #{quantity}, #{image}, #{createTime})
+            ON DUPLICATE KEY UPDATE
+                                 name = VALUES(name),
+                                 introduction = VALUES(introduction),
+                                 price = VALUES(price),
+                                 quantity = VALUES(quantity),
+                                 image = VALUES(image),
+                                 createtime = VALUES(createtime)
+    </insert>
+
     <select id="list" resultType="org.example.acg.entity.Product">
         SELECT * FROM product
+    </select>
+
+    <select id="getProductById" resultType="org.example.acg.entity.Product">
+        SELECT * FROM product WHERE id = #{id}
     </select>
 
     <select id="getProductByName" resultType="org.example.acg.entity.Product">

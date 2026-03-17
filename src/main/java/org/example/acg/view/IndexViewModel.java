@@ -8,6 +8,7 @@ import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -16,10 +17,14 @@ import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.RouteScope;
 import com.vaadin.flow.spring.annotation.RouteScopeOwner;
 import jakarta.annotation.PostConstruct;
+import org.example.acg.config.MsgUtil;
+import org.example.acg.entity.Cart;
 import org.example.acg.entity.Product;
 import org.example.acg.entity.User;
+import org.example.acg.service.CartService;
 import org.example.acg.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,6 +41,8 @@ public class IndexViewModel extends VerticalLayout {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private CartService cartService;
 
     // UI 颜色常量定义
     private static final String BG_COLOR_PAGE = "#f8f9fa";
@@ -105,6 +112,14 @@ public class IndexViewModel extends VerticalLayout {
     }
 
     // ================= 数据加载与处理逻辑 =================
+
+    private User getCurrentUser() {
+        VaadinSession session = VaadinSession.getCurrent();
+        if (session != null) {
+            return (User) session.getAttribute("user");
+        }
+        return null;
+    }
 
     /**
      * 加载所有商品并渲染到页面上
@@ -273,6 +288,28 @@ public class IndexViewModel extends VerticalLayout {
                 .setHeight("40px")
                 .setWidth("40px")
                 .setMinWidth("40px");
+
+        // 绑定点击事件
+        addToCartButton.addClickListener(e -> {
+            User user = getCurrentUser();
+
+            // 1. 检查是否登录
+            if (user == null) {
+                MsgUtil.warning("请先登录后再加入购物车", Notification.Position.TOP_CENTER);
+                return;
+            }
+
+            // 2. 调用服务层逻辑
+            String result = cartService.addToCart(user, product.getId());
+
+            // 3. 根据结果反馈
+            if ("success".equals(result)) {
+                MsgUtil.success("已成功添加到购物车！", Notification.Position.TOP_CENTER);
+                loadProducts();
+            } else {
+                MsgUtil.error(result, Notification.Position.TOP_CENTER);
+            }
+        });
 
         priceActionLayout.add(priceLabel, addToCartButton);
 

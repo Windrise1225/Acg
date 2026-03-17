@@ -2,7 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.acg.mapper.CartMapper">
 
-    <select id="listByUserId" >
+    <select id="list" >
+        SELECT * FROM cart
+    </select>
+
+    <select id="listByUserId">
         SELECT * FROM cart WHERE user_id = #{userId}
     </select>
+
+    <insert id="insert">
+        INSERT INTO cart (user_id, product_id, product_quantity, product_price, create_time) VALUES (#{userId}, #{productId}, 1, #{productPrice}, #{createTime})
+    </insert>
+
+    <update id="update">
+        UPDATE cart SET product_quantity = #{productQuantity} , last_modified_time = #{lastModifiedTime}, last_modified_user_name = #{lastModifiedUserName} WHERE user_id = #{userId} and product_id = #{productId}
+    </update>
+
+    <select id="getByUserIdAndProductId" >
+        SELECT * FROM cart WHERE user_id = #{userId} and product_id = #{productId}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM cart WHERE id = #{id}
+    </delete>
+
+    <select id="getById">
+        SELECT * FROM cart WHERE id = #{id}
+    </select>
+
 </mapper>

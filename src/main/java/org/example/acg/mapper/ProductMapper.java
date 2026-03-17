@@ -10,7 +10,11 @@ import java.util.List;
 @Mapper
 public interface ProductMapper {
 
+    void save(Product product);
+
     List<Product> list();
+
+    Product getProductById(@Param("id") Integer id);
 
     Product getProductByName(@Param("name") String name);
 
