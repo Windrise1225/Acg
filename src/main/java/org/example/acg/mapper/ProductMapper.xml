@@ -4,7 +4,7 @@
 
     <!-- 智能保存：存在则更新，不存在则插入 (MySQL 特有语法) -->
     <insert id="save" parameterType="org.example.acg.entity.Product">
-        INSERT INTO product (name, introduction, price, quantity, image, createtime)
+        INSERT INTO product (name, introduction, price, quantity, image, create_time)
         VALUES (#{name}, #{introduction}, #{price}, #{quantity}, #{image}, #{createTime})
             ON DUPLICATE KEY UPDATE
                                  name = VALUES(name),
@@ -32,7 +32,7 @@
     </select>
 
     <insert id="insertProduct" parameterType="org.example.acg.entity.Product">
-        INSERT INTO product (name, introduction, price, quantity, image, createtime) VALUES (#{name}, #{introduction}, #{price}, #{quantity}, #{image}, #{createTime})
+        INSERT INTO product (name, introduction, price, quantity, image, create_time) VALUES (#{name}, #{introduction}, #{price}, #{quantity}, #{image}, #{createTime})
     </insert>
 
     <delete id="deleteProduct" >
@@ -40,6 +40,6 @@
     </delete>
 
     <update id="updateProduct" >
-        UPDATE product SET name = #{name}, introduction = #{introduction}, price = #{price}, quantity = #{quantity}, image = #{image}, createtime = #{createTime} WHERE id = #{id}
+        UPDATE product SET name = #{name}, introduction = #{introduction}, price = #{price}, quantity = #{quantity}, image = #{image}, create_time = #{createTime} WHERE id = #{id}
     </update>
 </mapper>
