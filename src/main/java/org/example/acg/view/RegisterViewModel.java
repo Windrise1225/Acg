@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.example.acg.config.enums.SexEnum;
 import org.example.acg.entity.User;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Scope;
 
 @Scope("prototype")
 @Route(value = "register")
+@SpringComponent
 // 注册页面
 public class RegisterViewModel extends VerticalLayout {
 

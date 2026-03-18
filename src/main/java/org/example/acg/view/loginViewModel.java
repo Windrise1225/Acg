@@ -9,6 +9,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.example.acg.entity.User;
 import org.example.acg.service.UserService;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 
 @Scope("prototype")
 @Route(value = "login")
+@SpringComponent
 // 登录页面
 public class loginViewModel extends VerticalLayout {
 
@@ -65,7 +67,7 @@ public class loginViewModel extends VerticalLayout {
 
         tip.setText("没有账户？前往注册。");
         tip.getStyle()
-                .set("color", "#6c5ce7")       // 链接颜色 (紫色，和你主题色一致)
+                .set("color", "#6c5ce7")       // 链接颜色
                 .set("cursor", "pointer")      // 鼠标悬停变手型
                 .set("text-decoration", "underline");
 

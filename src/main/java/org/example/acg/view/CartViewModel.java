@@ -19,19 +19,19 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.RouteScope;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.example.acg.entity.Cart;
 import org.example.acg.entity.Product;
 import org.example.acg.entity.User;
 import org.example.acg.service.CartService;
 import org.example.acg.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Route("cart")
-@Component
+@SpringComponent
 @RouteScope
 public class CartViewModel extends VerticalLayout implements BeforeEnterObserver, AfterNavigationObserver {
 

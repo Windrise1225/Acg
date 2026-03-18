@@ -28,3 +28,7 @@ package-lock.json
 # --- Others ---
 *.bak
 *.swp
+
+src/main/frontend/generated/
+target/
+*.log

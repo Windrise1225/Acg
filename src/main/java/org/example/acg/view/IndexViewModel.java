@@ -16,16 +16,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.RouteScope;
 import com.vaadin.flow.spring.annotation.RouteScopeOwner;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.PostConstruct;
 import org.example.acg.config.MsgUtil;
-import org.example.acg.entity.Cart;
 import org.example.acg.entity.Product;
 import org.example.acg.entity.User;
 import org.example.acg.service.CartService;
 import org.example.acg.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -34,7 +32,7 @@ import java.util.List;
  * 负责展示商品列表、导航栏、横幅广告以及处理搜索交互。
  */
 @Route("")
-@Component
+@SpringComponent
 @RouteScope
 @RouteScopeOwner(IndexViewModel.class)
 public class IndexViewModel extends VerticalLayout {
