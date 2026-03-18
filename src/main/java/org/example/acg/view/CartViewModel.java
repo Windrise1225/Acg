@@ -4,6 +4,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
@@ -379,10 +380,22 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
      * @param cart 待删除的购物车项
      */
     private void handleDeleteItem(Cart cart) {
-        cartService.deleteById(cart.getId());
-        Notification.show("已移除商品", 2000, Notification.Position.TOP_CENTER);
-        isDataLoaded = false;
-        loadCartData();
+        ConfirmDialog confirmDialog = new ConfirmDialog();
+        confirmDialog.setHeader("Delete product");
+        confirmDialog.setText("Are you sure you want to delete this product?");
+        confirmDialog.setConfirmText("Confirm");
+        confirmDialog.setCancelText("Cancel");
+        confirmDialog.setCancelable( true);
+        confirmDialog.setOpened(true);
+        confirmDialog.addConfirmListener(e -> {
+            cartService.deleteById(cart.getId());
+            Notification.show("", 2000, Notification.Position.TOP_CENTER);
+            isDataLoaded = false;
+            loadCartData();
+        });
+        confirmDialog.addCancelListener(e -> {
+            confirmDialog.close();
+        });
     }
 
     /**
