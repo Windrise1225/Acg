@@ -2,6 +2,11 @@ package org.example.acg.view;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -20,137 +25,265 @@ import org.springframework.context.annotation.Scope;
 @Scope("prototype")
 @Route(value = "register")
 @SpringComponent
-// 注册页面
 public class RegisterViewModel extends VerticalLayout {
 
     @Autowired
     private UserService userService;
 
+    // 组件定义
     private final TextField tfName = new TextField();
     private final ComboBox<SexEnum> cbSex = new ComboBox<>();
     private final TextField tfPhone = new TextField();
     private final TextField tfEmail = new TextField();
     private final PasswordField tfPassword = new PasswordField();
 
-    Button btnConfirm = new Button();
+    private final Button btnConfirm = new Button("注册");
+    private final Span backToLoginLink = new Span();
 
-    VerticalLayout parentLayout = new VerticalLayout();
-    VerticalLayout valueLayout = new VerticalLayout();
-    HorizontalLayout btnLayout = new HorizontalLayout();
-
+    // 颜色常量 (与登录页保持一致)
+    private static final String PRIMARY_COLOR = "#764ba2";
+    private static final String SECONDARY_COLOR = "#667eea";
+    private static final String BG_COLOR_PAGE = "#f8f9fa";
 
     public RegisterViewModel() {
-
         setSizeFull();
-        // （垂直方向）居中：实现整体垂直居中
+        getStyle().set("background", BG_COLOR_PAGE);
         setJustifyContentMode(JustifyContentMode.CENTER);
-        // （水平方向）居中：实现整体水平居中
         setAlignItems(Alignment.CENTER);
 
-        init();
-
-        btnChick();
-
+        initUI();
+        bindEvents();
     }
 
-    private void init() {
+    private void initUI() {
+        Div card = new Div();
+
+        card.setWidth("450px");
+        card.getStyle()
+                .set("background", "white")
+                .set("backdrop-filter", "blur(16px)")
+                .set("-webkit-backdrop-filter", "blur(16px)")
+                .set("border", "1px solid rgba(255, 255, 255, 0.8)")
+                .set("box-shadow", "0 8px 32px 0 rgba(31, 38, 135, 0.15)")
+                .set("border-radius", "24px")
+                .set("padding", "40px 30px")
+                .set("display", "flex")
+                .set("flex-direction", "column")
+                .set("gap", "18px")
+                .set("align-items", "center");
+
         cbSex.setItemLabelGenerator(SexEnum::getValue);
         cbSex.setItems(SexEnum.values());
-
-        tfName.setLabel("用户名");
-        tfName.setPlaceholder("请输入用户名");
-        tfName.setWidth("40%");
-        cbSex.setLabel("性别");
         cbSex.setPlaceholder("请选择性别");
-        cbSex.setWidth("40%");
-        tfPhone.setLabel("手机号");
-        tfPhone.setPlaceholder("请输入手机号");
-        tfPhone.setWidth("40%");
-        tfEmail.setLabel("邮箱");
-        tfEmail.setPlaceholder("请输入邮箱");
-        tfEmail.setWidth("40%");
-        tfPassword.setLabel("密码");
-        tfPassword.setPlaceholder("请输入密码");
-        tfPassword.setWidth("40%");
 
-        valueLayout.add(tfName, cbSex, tfPhone, tfEmail, tfPassword);
+        addLabeledField(card, "用户名", tfName, VaadinIcon.USER);
+        addLabeledField(card, "性别", cbSex, VaadinIcon.USER_HEART);
+        addLabeledField(card, "手机号", tfPhone, VaadinIcon.PHONE);
+        addLabeledField(card, "邮箱", tfEmail, VaadinIcon.ENVELOPE);
+        addLabeledField(card, "密码", tfPassword, VaadinIcon.LOCK);
 
-        valueLayout.setAlignItems(Alignment.CENTER);
+        // 5. 配置按钮样式
+        btnConfirm.setWidth("100%");
+        btnConfirm.setHeight("48px");
+        btnConfirm.getStyle()
+                .set("border-radius", "12px")
+                .set("font-weight", "600")
+                .set("font-size", "16px")
+                .set("background", "linear-gradient(135deg, " + SECONDARY_COLOR + " 0%, " + PRIMARY_COLOR + " 100%)")
+                .set("color", "white")
+                .set("border", "none")
+                .set("box-shadow", "0 4px 15px rgba(118, 75, 162, 0.3)")
+                .set("cursor", "pointer");
 
-        btnConfirm.setText("注册");
+        // 6. 底部返回登录链接
+        backToLoginLink.setText("已有账户？前往登录");
+        backToLoginLink.getStyle()
+                .set("color", PRIMARY_COLOR)
+                .set("cursor", "pointer")
+                .set("font-size", "14px")
+                .set("margin-top", "5px");
 
-        btnLayout.add(btnConfirm);
+        // 链接 hover 效果
+        backToLoginLink.getElement().addEventListener("mouseenter", e ->
+                backToLoginLink.getStyle().set("color", SECONDARY_COLOR));
+        backToLoginLink.getElement().addEventListener("mouseleave", e ->
+                backToLoginLink.getStyle().set("color", PRIMARY_COLOR));
 
-        parentLayout.add(valueLayout, btnLayout);
+        card.add(btnConfirm);
+        card.add(backToLoginLink);
 
-//        parentLayout.getStyle().setBackgroundColor("#9de8fa");
-        parentLayout.setWidth("40%");
-        parentLayout.setAlignItems(Alignment.CENTER);
-
-        add(parentLayout);
+        add(card);
     }
 
-    private void btnChick() {
-        btnConfirm.addClickListener(event -> {
-            if (StringUtils.isEmpty( tfName.getValue())){
-                tfName.setErrorMessage("请输入用户名！");
-                tfName.setInvalid(true);
-                return;
-            }
-            if (cbSex.getValue() == null){
-                cbSex.setErrorMessage("请选择性别！");
-                cbSex.setInvalid(true);
-                return;
-            }
-            if (StringUtils.isEmpty( tfPhone.getValue())){
-                tfPhone.setErrorMessage("请输入手机号！");
-                tfPhone.setInvalid(true);
-                return;
-            }
-            if (StringUtils.isEmpty( tfEmail.getValue())){
-                tfEmail.setErrorMessage("请输入邮箱！");
-                tfEmail.setInvalid(true);
-                return;
-            }
-            if (StringUtils.isEmpty( tfPassword.getValue())){
-                tfPassword.setErrorMessage("请输入密码！");
-                tfPassword.setInvalid(true);
-                return;
-            }
-            User user = userService.getUserByName(tfName.getValue());
-            if (user != null) {
-                tfName.setErrorMessage("用户已存在！");
-                tfName.setInvalid(true);
-                return;
-            }
+    /**
+     * 添加一个“标签在左，输入框在右”的字段行 (TextField 版本)
+     */
+    private void addLabeledField(Div container, String labelText, TextField field, VaadinIcon icon) {
+        HorizontalLayout row = new HorizontalLayout();
+        row.setWidthFull();
+        row.setAlignItems(Alignment.CENTER);
+        row.setSpacing(true);
 
-            User userNew = new User();
+        // 左侧标签
+        Span label = new Span(labelText + ":");
+        label.getStyle()
+                .set("width", "80px")
+                .set("flex-shrink", "0")
+                .set("font-weight", "500")
+                .set("color", "#555")
+                .set("text-align", "right")
+                .set("padding-right", "10px");
 
-            userNew.setName(tfName.getValue());
-            userNew.setSex(cbSex.getValue().getCode());
-            userNew.setPhone(tfPhone.getValue());
-            userNew.setEmail(tfEmail.getValue());
-            userNew.setPassword(tfPassword.getValue());
+        // 右侧输入框
+        field.setWidthFull();
+        field.setPlaceholder("请输入" + labelText);
+        if (icon != null) {
+            field.setPrefixComponent(icon.create());
+        }
+        field.getStyle().set("font-size", "15px");
 
-            userService.insertUser( userNew);
-
-            Notification success = new Notification();
-            success.setText("注册成功！");
-            success.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-            success.open();
-            success.setDuration(2000);
-            success.setPosition(Notification.Position.TOP_CENTER);
-            clearTf();
-            getUI().ifPresent(ui -> ui.navigate("login"));
-        });
+        row.add(label, field);
+        container.add(row);
     }
 
-    private void clearTf(){
+    /**
+     * 添加一个“标签在左，输入框在右”的字段行 (PasswordField 版本)
+     */
+    private void addLabeledField(Div container, String labelText, PasswordField field, VaadinIcon icon) {
+        HorizontalLayout row = new HorizontalLayout();
+        row.setWidthFull();
+        row.setAlignItems(Alignment.CENTER);
+        row.setSpacing(true);
+
+        Span label = new Span(labelText + ":");
+        label.getStyle()
+                .set("width", "80px")
+                .set("flex-shrink", "0")
+                .set("font-weight", "500")
+                .set("color", "#555")
+                .set("text-align", "right")
+                .set("padding-right", "10px");
+
+        field.setWidthFull();
+        field.setPlaceholder("请输入" + labelText);
+        if (icon != null) {
+            field.setPrefixComponent(icon.create());
+        }
+        field.getStyle().set("font-size", "15px");
+
+        row.add(label, field);
+        container.add(row);
+    }
+
+    /**
+     * 添加一个“标签在左，输入框在右”的字段行 (ComboBox 版本)
+     */
+    private void addLabeledField(Div container, String labelText, ComboBox<SexEnum> combo, VaadinIcon icon) {
+        HorizontalLayout row = new HorizontalLayout();
+        row.setWidthFull();
+        row.setAlignItems(Alignment.CENTER);
+        row.setSpacing(true);
+
+        Span label = new Span(labelText + ":");
+        label.getStyle()
+                .set("width", "80px")
+                .set("flex-shrink", "0")
+                .set("font-weight", "500")
+                .set("color", "#555")
+                .set("text-align", "right")
+                .set("padding-right", "10px");
+
+        combo.setWidthFull();
+        // ComboBox 不需要 placeholder 如果已经有 item，但为了统一可以保留
+        combo.setPlaceholder("请选择" + labelText);
+        if (icon != null) {
+            combo.setPrefixComponent(icon.create());
+        }
+        combo.getStyle().set("font-size", "15px");
+
+        row.add(label, combo);
+        container.add(row);
+    }
+
+    private void bindEvents() {
+        // 注册按钮点击
+        btnConfirm.addClickListener(event -> handleRegister());
+
+        // 密码框回车注册
+        tfPassword.addKeyPressListener(com.vaadin.flow.component.Key.ENTER, event -> handleRegister());
+
+        // 返回登录链接点击
+        backToLoginLink.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("login")));
+    }
+
+    // ================= 原有逻辑保持不变 =================
+
+    private void handleRegister() {
+        // 重置错误状态
+        tfName.setInvalid(false);
+        cbSex.setInvalid(false);
+        tfPhone.setInvalid(false);
+        tfEmail.setInvalid(false);
+        tfPassword.setInvalid(false);
+
+        if (StringUtils.isEmpty(tfName.getValue())) {
+            tfName.setErrorMessage("请输入用户名！");
+            tfName.setInvalid(true);
+            return;
+        }
+        if (cbSex.getValue() == null) {
+            cbSex.setErrorMessage("请选择性别！");
+            cbSex.setInvalid(true);
+            return;
+        }
+        if (StringUtils.isEmpty(tfPhone.getValue())) {
+            tfPhone.setErrorMessage("请输入手机号！");
+            tfPhone.setInvalid(true);
+            return;
+        }
+        if (StringUtils.isEmpty(tfEmail.getValue())) {
+            tfEmail.setErrorMessage("请输入邮箱！");
+            tfEmail.setInvalid(true);
+            return;
+        }
+        if (StringUtils.isEmpty(tfPassword.getValue())) {
+            tfPassword.setErrorMessage("请输入密码！");
+            tfPassword.setInvalid(true);
+            return;
+        }
+
+        User user = userService.getUserByName(tfName.getValue());
+        if (user != null) {
+            tfName.setErrorMessage("用户已存在！");
+            tfName.setInvalid(true);
+            return;
+        }
+
+        User userNew = new User();
+        userNew.setName(tfName.getValue());
+        userNew.setSex(cbSex.getValue().getCode());
+        userNew.setPhone(tfPhone.getValue());
+        userNew.setEmail(tfEmail.getValue());
+        userNew.setPassword(tfPassword.getValue());
+
+        userService.insertUser(userNew);
+
+        Notification success = new Notification();
+        success.setText("注册成功！");
+        success.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        success.open();
+        success.setDuration(2000);
+        success.setPosition(Notification.Position.TOP_CENTER);
+
+        clearTf();
+        getUI().ifPresent(ui -> ui.navigate("login"));
+    }
+
+    private void clearTf() {
         tfName.clear();
         cbSex.clear();
         tfPhone.clear();
         tfEmail.clear();
         tfPassword.clear();
     }
-
 }

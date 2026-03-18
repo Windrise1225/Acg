@@ -1,8 +1,12 @@
 package org.example.acg.view;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -19,97 +23,173 @@ import org.springframework.context.annotation.Scope;
 @Scope("prototype")
 @Route(value = "login")
 @SpringComponent
-// 登录页面
 public class loginViewModel extends VerticalLayout {
 
     @Autowired
     private UserService userService;
 
+    // 组件定义
     private final TextField tfName = new TextField();
     private final PasswordField tfPassword = new PasswordField();
-    Span tip = new Span();
+    private final Span tipLink = new Span();
+    private final Button btnConfirm = new Button("Log in");
 
-    Button btnConfirm = new Button();
-
-    VerticalLayout parentLayout = new VerticalLayout();
-    VerticalLayout valueLayout = new VerticalLayout();
-    HorizontalLayout btnLayout = new HorizontalLayout();
-
+    // 颜色常量
+    private static final String PRIMARY_COLOR = "#764ba2";
+    private static final String SECONDARY_COLOR = "#667eea";
+    private static final String BG_COLOR_PAGE = "#f8f9fa";
 
     public loginViewModel() {
-
         setSizeFull();
-        // （垂直方向）居中：实现整体垂直居中
+        getStyle().set("background", BG_COLOR_PAGE);
         setJustifyContentMode(JustifyContentMode.CENTER);
-        // （水平方向）居中：实现整体水平居中
         setAlignItems(Alignment.CENTER);
 
-        init();
-
-        btnChick();
-
+        initUI();
+        bindEvents();
     }
 
-    private void init() {
+    private void initUI() {
+        Div card = new Div();
+        card.setWidth("400px");
+        card.getStyle()
+                .set("background", "white")
+                .set("backdrop-filter", "blur(16px)")
+                .set("-webkit-backdrop-filter", "blur(16px)")
+                .set("border", "1px solid rgba(255, 255, 255, 0.8)")
+                .set("box-shadow", "0 8px 32px 0 rgba(31, 38, 135, 0.15)")
+                .set("border-radius", "24px")
+                .set("padding", "40px 30px")
+                .set("display", "flex")
+                .set("flex-direction", "column")
+                .set("gap", "20px")
+                .set("align-items", "center");
 
-        tfName.setLabel("用户名");
-        tfName.setPlaceholder("请输入用户名");
-        tfName.setWidth("40%");
-        tfPassword.setLabel("密码");
-        tfPassword.setPlaceholder("请输入密码");
-        tfPassword.setWidth("40%");
 
-        valueLayout.add(tfName, tfPassword);
+        btnConfirm.setWidth("100%");
+        btnConfirm.setHeight("48px");
+        btnConfirm.getStyle()
+                .set("border-radius", "12px")
+                .set("font-weight", "600")
+                .set("font-size", "16px")
+                .set("background", "linear-gradient(135deg, " + SECONDARY_COLOR + " 0%, " + PRIMARY_COLOR + " 100%)")
+                .set("color", "white")
+                .set("border", "none")
+                .set("box-shadow", "0 4px 15px rgba(118, 75, 162, 0.3)")
+                .set("cursor", "pointer");
 
-        valueLayout.setAlignItems(Alignment.CENTER);
+        tipLink.setText("没有账户？前往注册");
+        tipLink.getStyle()
+                .set("color", PRIMARY_COLOR)
+                .set("cursor", "pointer")
+                .set("font-size", "14px")
+                .set("margin-top", "10px");
 
-        btnConfirm.setText("登录");
+        // 链接 hover 效果
+        tipLink.getElement().addEventListener("mouseenter", e -> tipLink.getStyle().set("color", SECONDARY_COLOR));
+        tipLink.getElement().addEventListener("mouseleave", e -> tipLink.getStyle().set("color", PRIMARY_COLOR));
 
-        tip.setText("没有账户？前往注册。");
-        tip.getStyle()
-                .set("color", "#6c5ce7")       // 链接颜色
-                .set("cursor", "pointer")      // 鼠标悬停变手型
-                .set("text-decoration", "underline");
+        addLabeledField(card, "用户名", tfName, VaadinIcon.USER);
+        addLabeledField(card, "密码", tfPassword, VaadinIcon.LOCK);
 
-        btnLayout.add(btnConfirm);
+        card.add(btnConfirm);
 
-        parentLayout.add(valueLayout, btnLayout,  tip);
+        card.add(tipLink);
 
-//        parentLayout.getStyle().setBackgroundColor("#9de8fa");
-        parentLayout.setWidth("40%");
-        parentLayout.setAlignItems(Alignment.CENTER);
-
-        add(parentLayout);
+        add(card);
     }
 
-    private void btnChick() {
-        btnConfirm.addClickListener(event -> {
-            if (StringUtils.isEmpty( tfName.getValue())){
-                tfName.setErrorMessage("请输入用户名！");
-                tfName.setInvalid(true);
-            }
-            if (StringUtils.isEmpty( tfPassword.getValue())){
-                tfPassword.setErrorMessage("请输入密码！");
+    /**
+     * 添加一个“标签在左，输入框在右”的字段行
+     */
+    private void addLabeledField(Div container, String labelText, TextField field, VaadinIcon icon) {
+        HorizontalLayout row = new HorizontalLayout();
+        row.setWidthFull();
+        row.setAlignItems(Alignment.CENTER);
+        row.setSpacing(true);
+
+        // 左侧标签
+        Span label = new Span(labelText + ":");
+        label.getStyle()
+                .set("width", "80px")          // 固定标签宽度，保证对齐
+                .set("flex-shrink", "0")       // 不被压缩
+                .set("font-weight", "500")
+                .set("color", "#555")
+                .set("text-align", "right")    // 标签右对齐，更美观
+                .set("padding-right", "10px");
+
+        // 右侧输入框
+        field.setWidthFull();
+        field.setPlaceholder("请输入" + labelText);
+        field.setPrefixComponent(icon.create());
+
+        // 恢复 Vaadin 默认样式（不自定义 background/border）
+        field.getStyle()
+                .set("font-size", "15px");
+
+        row.add(label, field);
+        container.add(row);
+    }
+
+    // 重载用于 PasswordField
+    private void addLabeledField(Div container, String labelText, PasswordField field, VaadinIcon icon) {
+        HorizontalLayout row = new HorizontalLayout();
+        row.setWidthFull();
+        row.setAlignItems(Alignment.CENTER);
+        row.setSpacing(true);
+
+        Span label = new Span(labelText + ":");
+        label.getStyle()
+                .set("width", "80px")
+                .set("flex-shrink", "0")
+                .set("font-weight", "500")
+                .set("color", "#555")
+                .set("text-align", "right")
+                .set("padding-right", "10px");
+
+        field.setWidthFull();
+        field.setPlaceholder("请输入" + labelText);
+        field.setPrefixComponent(icon.create());
+
+        field.getStyle().set("font-size", "15px");
+
+        row.add(label, field);
+        container.add(row);
+    }
+
+    private void bindEvents() {
+        btnConfirm.addClickListener(event -> login());
+        tfPassword.addKeyPressListener(Key.ENTER, event -> login());
+        tipLink.addClickListener(event -> UI.getCurrent().navigate("register"));
+    }
+
+    private void login() {
+        tfName.setInvalid(false);
+        tfPassword.setInvalid(false);
+
+        if (StringUtils.isEmpty(tfName.getValue())) {
+            tfName.setErrorMessage("请输入用户名！");
+            tfName.setInvalid(true);
+            return;
+        }
+        if (StringUtils.isEmpty(tfPassword.getValue())) {
+            tfPassword.setErrorMessage("请输入密码！");
+            tfPassword.setInvalid(true);
+            return;
+        }
+
+        User user = userService.getUserByName(tfName.getValue());
+        if (user != null) {
+            if (user.getPassword().equals(tfPassword.getValue())) {
+                VaadinSession.getCurrent().setAttribute("user", user);
+                getUI().ifPresent(ui -> ui.navigate(""));
+            } else {
+                tfPassword.setErrorMessage("密码错误！");
                 tfPassword.setInvalid(true);
             }
-            User user = userService.getUserByName(tfName.getValue());
-            if (user != null) {
-                if (user.getPassword().equals(tfPassword.getValue())){
-                    VaadinSession.getCurrent().setAttribute("user", user);
-                    getUI().ifPresent(ui -> ui.navigate(""));
-                }else {
-                    tfPassword.setErrorMessage("密码错误！");
-                    tfPassword.setInvalid(true);
-                }
-            }else {
-                tfName.setErrorMessage("用户不存在！");
-                tfName.setInvalid(true);
-            }
-        });
-
-        tip.addClickListener(event -> {
-            UI.getCurrent().navigate("register");
-        });
+        } else {
+            tfName.setErrorMessage("用户不存在！");
+            tfName.setInvalid(true);
+        }
     }
-
 }

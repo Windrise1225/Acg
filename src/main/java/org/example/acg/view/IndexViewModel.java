@@ -356,20 +356,6 @@ public class IndexViewModel extends VerticalLayout {
     }
 
     /**
-     * 创建管理按钮（仅管理员可见）
-     */
-    private Button createManageButton() {
-        Button manageBtn = new Button("management");
-        // 权限控制：仅当用户存在且用户名为 admin 时显示
-        manageBtn.setVisible(currentUser != null && "admin".equals(currentUser.getName()));
-
-        // 绑定点击事件：跳转到商品管理页面
-        manageBtn.addClickListener(e -> UI.getCurrent().navigate("product"));
-
-        return manageBtn;
-    }
-
-    /**
      * 创建用户按钮（登录/个人信息/退出）
      */
     private Button createUserButton() {
@@ -474,7 +460,6 @@ public class IndexViewModel extends VerticalLayout {
         layout.add(
                 createSearchField(),
                 createCartButton(),
-                createManageButton(),
                 createUserButton()
         );
         return layout;
@@ -544,8 +529,15 @@ public class IndexViewModel extends VerticalLayout {
         ContextMenu contextMenu = new ContextMenu(userBtn);
         contextMenu.setOpenOnClick(true);
 
-        MenuItem logoutItem = contextMenu.addItem("退出登录");
+        MenuItem manageItem = contextMenu.addItem("Product Management");
+        manageItem.setVisible(currentUser != null && "admin".equals(currentUser.getName()));
+
+        // 绑定点击事件：跳转到商品管理页面
+        manageItem.addClickListener(e -> UI.getCurrent().navigate("product"));
+
+        MenuItem logoutItem = contextMenu.addItem("Log out");
         logoutItem.addClickListener(e -> handleLogout());
+
     }
 
     /**
