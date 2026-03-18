@@ -78,7 +78,7 @@ public class loginViewModel extends VerticalLayout {
                 .set("box-shadow", "0 4px 15px rgba(118, 75, 162, 0.3)")
                 .set("cursor", "pointer");
 
-        tipLink.setText("没有账户？前往注册");
+        tipLink.setText("Don't have an account? Go to register");
         tipLink.getStyle()
                 .set("color", PRIMARY_COLOR)
                 .set("cursor", "pointer")
@@ -89,8 +89,8 @@ public class loginViewModel extends VerticalLayout {
         tipLink.getElement().addEventListener("mouseenter", e -> tipLink.getStyle().set("color", SECONDARY_COLOR));
         tipLink.getElement().addEventListener("mouseleave", e -> tipLink.getStyle().set("color", PRIMARY_COLOR));
 
-        addLabeledField(card, "用户名", tfName, VaadinIcon.USER);
-        addLabeledField(card, "密码", tfPassword, VaadinIcon.LOCK);
+        addLabeledField(card, "Username", tfName, VaadinIcon.USER);
+        addLabeledField(card, "Password", tfPassword, VaadinIcon.LOCK);
 
         card.add(btnConfirm);
 
@@ -120,7 +120,7 @@ public class loginViewModel extends VerticalLayout {
 
         // 右侧输入框
         field.setWidthFull();
-        field.setPlaceholder("请输入" + labelText);
+        field.setPlaceholder("Please enter " + labelText);
         field.setPrefixComponent(icon.create());
 
         // 恢复 Vaadin 默认样式（不自定义 background/border）
@@ -148,7 +148,7 @@ public class loginViewModel extends VerticalLayout {
                 .set("padding-right", "10px");
 
         field.setWidthFull();
-        field.setPlaceholder("请输入" + labelText);
+        field.setPlaceholder("Please enter " + labelText);
         field.setPrefixComponent(icon.create());
 
         field.getStyle().set("font-size", "15px");
@@ -168,12 +168,12 @@ public class loginViewModel extends VerticalLayout {
         tfPassword.setInvalid(false);
 
         if (StringUtils.isEmpty(tfName.getValue())) {
-            tfName.setErrorMessage("请输入用户名！");
+            tfName.setErrorMessage("Please enter your username!");
             tfName.setInvalid(true);
             return;
         }
         if (StringUtils.isEmpty(tfPassword.getValue())) {
-            tfPassword.setErrorMessage("请输入密码！");
+            tfPassword.setErrorMessage("Please enter your password!");
             tfPassword.setInvalid(true);
             return;
         }
@@ -184,11 +184,11 @@ public class loginViewModel extends VerticalLayout {
                 VaadinSession.getCurrent().setAttribute("user", user);
                 getUI().ifPresent(ui -> ui.navigate(""));
             } else {
-                tfPassword.setErrorMessage("密码错误！");
+                tfPassword.setErrorMessage("Incorrect password!");
                 tfPassword.setInvalid(true);
             }
         } else {
-            tfName.setErrorMessage("用户不存在！");
+            tfName.setErrorMessage("The user does not exist!");
             tfName.setInvalid(true);
         }
     }
