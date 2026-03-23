@@ -30,4 +30,8 @@
         SELECT * FROM cart WHERE id = #{id}
     </select>
 
+    <delete id="clearCart">
+        DELETE FROM cart WHERE user_id = #{userId}
+    </delete>
+
 </mapper>

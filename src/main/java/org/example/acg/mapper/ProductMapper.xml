@@ -42,4 +42,8 @@
     <update id="updateProduct" >
         UPDATE product SET name = #{name}, introduction = #{introduction}, price = #{price}, quantity = #{quantity}, image = #{image}, create_time = #{createTime} WHERE id = #{id}
     </update>
+
+    <update id="decreaseStock">
+        UPDATE product SET quantity = quantity - #{quantity} WHERE id = #{id} AND quantity >= #{quantity}
+    </update>
 </mapper>

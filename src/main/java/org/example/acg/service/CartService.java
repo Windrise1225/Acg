@@ -116,4 +116,8 @@ public class CartService {
 
         return "success";
     }
+
+    public void clearCart(Integer userId){
+        cartMapper.clearCart(userId);
+    }
 }

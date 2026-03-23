@@ -46,4 +46,8 @@ public class ProductService {
         productMapper.deleteProduct(id);
         return true;
     }
+
+    public void decreaseStock(Integer id, Integer quantity){
+        productMapper.decreaseStock(id, quantity);
+    }
 }

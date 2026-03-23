@@ -25,4 +25,6 @@ public interface ProductMapper {
     boolean deleteProduct(@Param("id") Integer id);
 
     void updateProduct(Product product);
+
+    void decreaseStock(@Param("id") Integer id, @Param("quantity") Integer quantity);
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.acg.mapper.DailySequenceMapper">
+
+    <select id="findByDateKey" resultType="org.example.acg.entity.DailySequence">
+        SELECT date_key, current_seq
+        FROM daily_order_sequence
+        WHERE date_key = #{dateKey}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO daily_order_sequence (date_key, current_seq)
+        VALUES (#{dateKey}, #{currentSeq})
+    </insert>
+
+    <update id="updateSeq">
+        UPDATE daily_order_sequence
+        SET current_seq = #{newSeq}
+        WHERE date_key = #{dateKey}
+          AND current_seq = #{oldSeq}
+    </update>
+</mapper>

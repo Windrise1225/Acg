@@ -4,7 +4,6 @@ package org.example.acg.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.example.acg.entity.Cart;
-import org.example.acg.entity.User;
 
 import java.util.List;
 
@@ -26,5 +25,7 @@ public interface CartMapper {
     void deleteById(Integer id);
 
     void changeQuantity(@Param("id") Integer id, @Param("delta") Integer delta);
+
+    void clearCart(@Param("userId") Integer userId);
 
 }

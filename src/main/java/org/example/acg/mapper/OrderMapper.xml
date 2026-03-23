@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.acg.mapper.OrderMapper">
 
+    <select id="list" resultType="org.example.acg.entity.Order">
+        SELECT * FROM `order`
+    </select>
+
+    <select id="listByUserId" resultType="org.example.acg.entity.Order">
+        SELECT * FROM `order` WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insert" parameterType="org.example.acg.entity.Order">
+        INSERT INTO `order` (
+            order_number, user_id, sum_price, create_time, create_user_name,
+            last_modified_time, last_modified_user_name, status, remark
+        ) VALUES (
+                     #{orderNumber}, #{userId}, #{sumPrice}, #{createTime}, #{createUserName},
+                     #{lastModifiedTime}, #{lastModifiedUserName}, #{status}, #{remark}
+                 )
+    </insert>
+
+    <update id="update" parameterType="org.example.acg.entity.Order">
+        UPDATE `order`
+        SET sum_price = #{sumPrice},
+            last_modified_time = #{lastModifiedTime},
+            last_modified_user_name = #{lastModifiedUserName},
+            status = #{status},
+            remark = #{remark}
+        WHERE id = #{id}
+    </update>
 </mapper>

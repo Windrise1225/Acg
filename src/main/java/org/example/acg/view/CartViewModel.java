@@ -21,10 +21,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.RouteScope;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import org.example.acg.config.MsgUtil;
 import org.example.acg.entity.Cart;
 import org.example.acg.entity.Product;
 import org.example.acg.entity.User;
 import org.example.acg.service.CartService;
+import org.example.acg.service.OrderService;
 import org.example.acg.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,12 +46,16 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
     private CartService cartService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private OrderService orderService;
 
     private VerticalLayout productListLayout;
     private User currentUser;
     private Div totalPriceLabel;
     private boolean isDataLoaded = false;
     private boolean isUiBuilt = false;
+
+    private double sumPrice = 0;
 
     public CartViewModel() {
         setSizeFull();
@@ -181,6 +187,7 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
 
         if (totalPriceLabel != null) {
             totalPriceLabel.setText("¥ " + String.format("%.2f", total));
+            sumPrice = total;
         }
     }
 
@@ -389,7 +396,7 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
         confirmDialog.setOpened(true);
         confirmDialog.addConfirmListener(e -> {
             cartService.deleteById(cart.getId());
-            Notification.show("", 2000, Notification.Position.TOP_CENTER);
+            MsgUtil.success("Delete successfully", Notification.Position.TOP_CENTER);
             isDataLoaded = false;
             loadCartData();
         });
@@ -458,7 +465,26 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
                 "cursor: pointer;";
 
         settleBtn.getElement().setProperty("style", btnStyle);
-        settleBtn.addClickListener(e -> Notification.show("结算功能开发中..."));
+        settleBtn.addClickListener(e -> {
+            ConfirmDialog confirmDialog = new ConfirmDialog();
+            confirmDialog.setHeader("结算");
+            confirmDialog.setText("总价钱为：" + sumPrice + " 元，确定要付款吗？");
+            confirmDialog.setConfirmText("Confirm");
+            confirmDialog.setCancelText("Cancel");
+            confirmDialog.setCancelable( true);
+            confirmDialog.setOpened(true);
+            confirmDialog.addConfirmListener( confirmEvent ->  {
+                UI.getCurrent().navigate("order");
+                User user = (User) VaadinSession.getCurrent().getAttribute("user");
+
+                List<Cart> currentCartList = cartService.listByUserId(user.getId());
+                String orderNumber = orderService.processCheckout(user, currentCartList, BigDecimal.valueOf(sumPrice));
+                MsgUtil.success("结算成功，订单号为：" + orderNumber, Notification.Position.BOTTOM_START);
+            });
+            confirmDialog.addCancelListener( cancelEvent ->  {
+                confirmDialog.close();
+            });
+        });
 
         layout.add(priceInfo, settleBtn);
 
