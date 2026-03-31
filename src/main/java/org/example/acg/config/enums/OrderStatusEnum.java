@@ -20,4 +20,21 @@ public enum OrderStatusEnum {
         this.code = code;
         this.value = value;
     }
+    public static OrderStatusEnum fromCode(String code) {
+        for (OrderStatusEnum status : OrderStatusEnum.values()) {
+            if (status.getCode().equals(code)) {
+                return status;
+            }
+        }
+        return null;
+    }
+
+    public static OrderStatusEnum fromValue(String value) {
+        for (OrderStatusEnum status : OrderStatusEnum.values()) {
+            if (status.getValue().equals(value)) {
+                return status;
+            }
+        }
+        return null;
+    }
 }

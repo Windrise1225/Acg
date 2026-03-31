@@ -33,6 +33,10 @@ public class OrderService {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
+    public List<Order> list() {
+        return orderMapper.list();
+    }
+
     /**
      * 处理结算全流程
      * @param user 用户
@@ -46,33 +50,27 @@ public class OrderService {
             throw new RuntimeException("购物车为空，无法结算");
         }
 
-        // 1. 生成订单号
         String orderNo = generateOrderNo();
 
-        // 2. 构建订单对象
         Order order = new Order();
         order.setOrderNumber(orderNo);
         order.setUserId(user.getId());
         order.setSumPrice(totalAmount);
-        order.setStatus(OrderStatusEnum.PENDING_DELIVERY.getCode()); // 或者 "PENDING"
+        order.setStatus(OrderStatusEnum.PENDING_DELIVERY.getCode());
         order.setRemark("系统自动生成");
 
         ZonedDateTime now = ZonedDateTime.now();
         order.setCreateTime(now);
         order.setLastModifiedTime(now);
-        // 假设当前登录用户名可以从上下文获取，这里暂时写死或传参，实际项目中建议从 SecurityContext 获取
         order.setCreateUserName(user.getName());
         order.setLastModifiedUserName(user.getName());
 
-        // 3. 保存订单
         orderMapper.insert(order);
 
-        // 4. 扣减库存
         for (Cart cart : cartList) {
             productService.decreaseStock(cart.getProductId(), cart.getProductQuantity());
         }
 
-        // 5. 清空购物车
         cartService.clearCart(user.getId());
 
         return orderNo;
@@ -123,5 +121,13 @@ public class OrderService {
 
     public List<Order> listByUserId(Integer userId) {
         return orderMapper.listByUserId(userId);
+    }
+
+    public List<Order> likeByOrderNumber(String orderNumber) {
+        return orderMapper.likeByOrderNumber(orderNumber);
+    }
+
+    public void updateStatus(Order order) {
+        orderMapper.updateStatus(order);
     }
 }

@@ -20,13 +20,17 @@
                  )
     </insert>
 
-    <update id="update" parameterType="org.example.acg.entity.Order">
+    <select id="likeByOrderNumber">
+        SELECT * FROM `order` WHERE order_number LIKE #{orderNumber}
+    </select>
+    <update id="updateStatus" parameterType="org.example.acg.entity.Order">
         UPDATE `order`
-        SET sum_price = #{sumPrice},
-            last_modified_time = #{lastModifiedTime},
-            last_modified_user_name = #{lastModifiedUserName},
+        SET
             status = #{status},
-            remark = #{remark}
-        WHERE id = #{id}
+            last_modified_time = #{lastModifiedTime},
+            last_modified_user_name = #{lastModifiedUserName}
+        WHERE
+            id = #{id}
     </update>
+
 </mapper>

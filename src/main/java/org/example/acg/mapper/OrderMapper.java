@@ -13,7 +13,9 @@ public interface OrderMapper {
 
     void insert(Order order);
 
-    void update(Order order);
+    void updateStatus(Order order);
 
     List<Order> listByUserId(Integer userId);
+
+    List<Order> likeByOrderNumber(String orderNumber);
 }

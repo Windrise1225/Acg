@@ -156,8 +156,6 @@ public class IndexViewModel extends VerticalLayout {
 
         if (productList == null || productList.isEmpty()) {
             Div emptyMsg = new Div("暂无商品");
-            // 简单判断是否是因为搜索导致的空结果，优化提示语（可选逻辑，保持原意）
-            // 这里保持原有逻辑的简洁性，统一显示提示
             emptyMsg.getStyle()
                     .set("padding", "20px")
                     .set("color", "#666")
@@ -529,10 +527,16 @@ public class IndexViewModel extends VerticalLayout {
         ContextMenu contextMenu = new ContextMenu(userBtn);
         contextMenu.setOpenOnClick(true);
 
+        MenuItem orderItem = contextMenu.addItem("Order");
+        orderItem.setVisible(currentUser != null && !"admin".equals(currentUser.getName()));
+        orderItem.addClickListener(e -> UI.getCurrent().navigate("order"));
+
+        MenuItem orderManagement = contextMenu.addItem("Order Management");
+        orderManagement.setVisible(currentUser != null && "admin".equals(currentUser.getName()));
+        orderManagement.addClickListener(e -> UI.getCurrent().navigate("orderManagement"));
+
         MenuItem manageItem = contextMenu.addItem("Product Management");
         manageItem.setVisible(currentUser != null && "admin".equals(currentUser.getName()));
-
-        // 绑定点击事件：跳转到商品管理页面
         manageItem.addClickListener(e -> UI.getCurrent().navigate("product"));
 
         MenuItem logoutItem = contextMenu.addItem("Log out");
