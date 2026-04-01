@@ -548,7 +548,7 @@ public class IndexViewModel extends VerticalLayout {
      * 配置未登录用户的按钮状态（显示“Sign in”、跳转登录页）
      */
     private void setupGuestUserButton(Button userBtn) {
-        userBtn.setText("Sign in");
+        userBtn.setText("登录");
         userBtn.addClickListener(e -> UI.getCurrent().navigate("login"));
     }
 

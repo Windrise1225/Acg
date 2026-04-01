@@ -165,6 +165,8 @@ public class ProductViewModel extends VerticalLayout {
                 });
                 confirm.addCancelListener(log -> {
                 });
+            }else {
+                MsgUtil.warning("请选择商品再进行删除！", Notification.Position.TOP_CENTER);
             }
         });
     }

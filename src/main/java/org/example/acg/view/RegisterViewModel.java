@@ -19,6 +19,8 @@ import org.example.acg.entity.User;
 import org.example.acg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Scope("prototype")
 @Route(value = "register")
@@ -35,13 +37,15 @@ public class RegisterViewModel extends VerticalLayout {
     private final TextField tfEmail = new TextField();
     private final PasswordField tfPassword = new PasswordField();
 
-    private final Button btnConfirm = new Button("Register");
+    private final Button btnConfirm = new Button("注册");
     private final Span backToLoginLink = new Span();
 
     // 颜色常量 (与登录页保持一致)
     private static final String PRIMARY_COLOR = "#764ba2";
     private static final String SECONDARY_COLOR = "#667eea";
     private static final String BG_COLOR_PAGE = "#f8f9fa";
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public RegisterViewModel() {
         setSizeFull();
@@ -74,11 +78,11 @@ public class RegisterViewModel extends VerticalLayout {
         cbSex.setItems(SexEnum.values());
         cbSex.setPlaceholder("请选择性别！");
 
-        addLabeledField(card, "Username", tfName, VaadinIcon.USER);
-        addLabeledField(card, "Gender", cbSex, VaadinIcon.USER_HEART);
-        addLabeledField(card, "Phone", tfPhone, VaadinIcon.PHONE);
-        addLabeledField(card, "Email", tfEmail, VaadinIcon.ENVELOPE);
-        addLabeledField(card, "Password", tfPassword, VaadinIcon.LOCK);
+        addLabeledField(card, "用户名", tfName, VaadinIcon.USER);
+        addLabeledField(card, "性别", cbSex, VaadinIcon.USER_HEART);
+        addLabeledField(card, "手机号", tfPhone, VaadinIcon.PHONE);
+        addLabeledField(card, "邮箱", tfEmail, VaadinIcon.ENVELOPE);
+        addLabeledField(card, "密码", tfPassword, VaadinIcon.LOCK);
 
         // 5. 配置按钮样式
         btnConfirm.setWidth("100%");
@@ -262,7 +266,10 @@ public class RegisterViewModel extends VerticalLayout {
         userNew.setSex(cbSex.getValue().getCode());
         userNew.setPhone(tfPhone.getValue());
         userNew.setEmail(tfEmail.getValue());
-        userNew.setPassword(tfPassword.getValue());
+
+        String value = tfPassword.getValue();
+        String encode = passwordEncoder.encode(value);
+        userNew.setPassword(encode);
 
         userService.insertUser(userNew);
 

@@ -19,6 +19,8 @@ import org.example.acg.entity.User;
 import org.example.acg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Scope("prototype")
 @Route(value = "login")
@@ -32,12 +34,14 @@ public class loginViewModel extends VerticalLayout {
     private final TextField tfName = new TextField();
     private final PasswordField tfPassword = new PasswordField();
     private final Span tipLink = new Span();
-    private final Button btnConfirm = new Button("Log in");
+    private final Button btnConfirm = new Button("登录");
 
     // 颜色常量
     private static final String PRIMARY_COLOR = "#764ba2";
     private static final String SECONDARY_COLOR = "#667eea";
     private static final String BG_COLOR_PAGE = "#f8f9fa";
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public loginViewModel() {
         setSizeFull();
@@ -78,7 +82,7 @@ public class loginViewModel extends VerticalLayout {
                 .set("box-shadow", "0 4px 15px rgba(118, 75, 162, 0.3)")
                 .set("cursor", "pointer");
 
-        tipLink.setText("Don't have an account? Go to register");
+        tipLink.setText("没有账号？前往注册");
         tipLink.getStyle()
                 .set("color", PRIMARY_COLOR)
                 .set("cursor", "pointer")
@@ -89,8 +93,8 @@ public class loginViewModel extends VerticalLayout {
         tipLink.getElement().addEventListener("mouseenter", e -> tipLink.getStyle().set("color", SECONDARY_COLOR));
         tipLink.getElement().addEventListener("mouseleave", e -> tipLink.getStyle().set("color", PRIMARY_COLOR));
 
-        addLabeledField(card, "Username", tfName, VaadinIcon.USER);
-        addLabeledField(card, "Password", tfPassword, VaadinIcon.LOCK);
+        addLabeledField(card, "用户名", tfName, VaadinIcon.USER);
+        addLabeledField(card, "密码", tfPassword, VaadinIcon.LOCK);
 
         card.add(btnConfirm);
 
@@ -120,7 +124,7 @@ public class loginViewModel extends VerticalLayout {
 
         // 右侧输入框
         field.setWidthFull();
-        field.setPlaceholder("Please enter " + labelText);
+        field.setPlaceholder("请输入" + labelText);
         field.setPrefixComponent(icon.create());
 
         // 恢复 Vaadin 默认样式（不自定义 background/border）
@@ -148,7 +152,7 @@ public class loginViewModel extends VerticalLayout {
                 .set("padding-right", "10px");
 
         field.setWidthFull();
-        field.setPlaceholder("Please enter " + labelText);
+        field.setPlaceholder("请输入" + labelText);
         field.setPrefixComponent(icon.create());
 
         field.getStyle().set("font-size", "15px");
@@ -180,7 +184,9 @@ public class loginViewModel extends VerticalLayout {
 
         User user = userService.getUserByName(tfName.getValue());
         if (user != null) {
-            if (user.getPassword().equals(tfPassword.getValue())) {
+            String value = tfPassword.getValue();
+            boolean isMatch = passwordEncoder.matches(value, user.getPassword());
+            if (isMatch) {
                 VaadinSession.getCurrent().setAttribute("user", user);
                 getUI().ifPresent(ui -> ui.navigate(""));
             } else {
