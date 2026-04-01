@@ -77,7 +77,7 @@ public class ProductViewModel extends VerticalLayout {
         add(mainContainer);
 
         init();
-        chickBtn();
+        clickBtn();
     }
 
     @PostConstruct
@@ -92,7 +92,7 @@ public class ProductViewModel extends VerticalLayout {
         }
     }
 
-    private void chickBtn() {
+    private void clickBtn() {
         tfSearch.addKeyDownListener(Key.ENTER, event -> {
             if ( tfSearch.getValue() == null || tfSearch.getValue().isEmpty()){
                 refreshGrid();
@@ -115,7 +115,7 @@ public class ProductViewModel extends VerticalLayout {
 
             dialog.setOnSuccess(() -> {
                 refreshGrid();
-                MsgUtil.success("Added successfully", Notification.Position.TOP_CENTER);
+                MsgUtil.success("添加成功！", Notification.Position.TOP_CENTER);
             });
 
             dialog.open();
@@ -132,13 +132,13 @@ public class ProductViewModel extends VerticalLayout {
 
                 dialog.setOnSuccess(() -> {
                     refreshGrid();
-                    MsgUtil.success("Modified successfully", Notification.Position.TOP_CENTER);
+                    MsgUtil.success("修改成功！", Notification.Position.TOP_CENTER);
                 });
 
                 dialog.open();
 
             }else {
-                MsgUtil.warning("Please select the product to be modified", Notification.Position.TOP_CENTER);
+                MsgUtil.warning("请选择商品再进行修改！", Notification.Position.TOP_CENTER);
             }
         });
 
@@ -151,16 +151,16 @@ public class ProductViewModel extends VerticalLayout {
             Product value = grid.asSingleSelect().getValue();
             if (value != null) {
                 ConfirmDialog confirm = new ConfirmDialog();
-                confirm.setHeader("Tip");
-                confirm.setText("Are you sure you want to delete it?");
-                confirm.setConfirmText("Confirm");
-                confirm.setCancelText("Cancel");
+                confirm.setHeader("提示");
+                confirm.setText("确定要删除此商品吗?");
+                confirm.setConfirmText("确认");
+                confirm.setCancelText("取消");
                 confirm.setCancelable( true);
                 confirm.setOpened(true);
                 confirm.addConfirmListener(log -> {
                     if (productService.deleteProduct(value.getId())) {
                         refreshGrid();
-                        MsgUtil.success("Deleted successfully", Notification.Position.TOP_CENTER);
+                        MsgUtil.success("删除成功", Notification.Position.TOP_CENTER);
                     }
                 });
                 confirm.addCancelListener(log -> {
@@ -170,10 +170,10 @@ public class ProductViewModel extends VerticalLayout {
     }
 
     private void createGrid() {
-        grid.addColumn(Product::getName).setHeader("Name").setAutoWidth(true);
-        grid.addColumn(Product::getIntroduction).setHeader("Introduction").setAutoWidth(true);
-        grid.addColumn(Product::getPrice).setHeader("Price").setAutoWidth(true);
-        grid.addColumn(Product::getQuantity).setHeader("Quantity").setAutoWidth(true);
+        grid.addColumn(Product::getName).setHeader("名称").setAutoWidth(true);
+        grid.addColumn(Product::getIntroduction).setHeader("简介").setAutoWidth(true);
+        grid.addColumn(Product::getPrice).setHeader("价格").setAutoWidth(true);
+        grid.addColumn(Product::getQuantity).setHeader("数量").setAutoWidth(true);
         grid.addComponentColumn(product -> {
             String imageName = product.getImage();
             if (imageName == null || imageName.isEmpty()) {
@@ -185,7 +185,7 @@ public class ProductViewModel extends VerticalLayout {
             img.setMaxHeight("50px");
             img.getStyle().set("object-fit", "contain");
             return img;
-        }).setHeader("Image").setAutoWidth(true);
+        }).setHeader("商品图片").setAutoWidth(true);
     }
 
     private HorizontalLayout createHorizontalLayout() {
@@ -196,7 +196,7 @@ public class ProductViewModel extends VerticalLayout {
         headerLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         tfSearch.setClearButtonVisible( true);
-        tfSearch.setPlaceholder("Search");
+        tfSearch.setPlaceholder("查询");
         tfSearch.setPrefixComponent(VaadinIcon.SEARCH.create());
         tfSearch.setWidth("200px");
         tfSearch.setHeight("40px");
@@ -207,13 +207,13 @@ public class ProductViewModel extends VerticalLayout {
         tfSearch.getElement().getStyle().set("--lumo-text-field-size", "40px");
 
         btnAdd.setIcon(VaadinIcon.FILE_ADD.create());
-        btnAdd.setText("Add");
+        btnAdd.setText("添加");
         btnEdit.setIcon(VaadinIcon.EDIT.create());
-        btnEdit.setText("Edit");
+        btnEdit.setText("修改");
         btnDelete.setIcon(VaadinIcon.TRASH.create());
-        btnDelete.setText("Delete");
+        btnDelete.setText("删除");
         btnRefresh.setIcon(VaadinIcon.REFRESH.create());
-        btnRefresh.setText("Refresh");
+        btnRefresh.setText("刷新");
 
         headerLayout.add(tfSearch, btnAdd, btnEdit, btnDelete, btnRefresh);
         return headerLayout;

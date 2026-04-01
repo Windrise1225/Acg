@@ -527,19 +527,19 @@ public class IndexViewModel extends VerticalLayout {
         ContextMenu contextMenu = new ContextMenu(userBtn);
         contextMenu.setOpenOnClick(true);
 
-        MenuItem orderItem = contextMenu.addItem("Order");
+        MenuItem orderItem = contextMenu.addItem("订单");
         orderItem.setVisible(currentUser != null && !"admin".equals(currentUser.getName()));
         orderItem.addClickListener(e -> UI.getCurrent().navigate("order"));
 
-        MenuItem orderManagement = contextMenu.addItem("Order Management");
+        MenuItem orderManagement = contextMenu.addItem("订单管理");
         orderManagement.setVisible(currentUser != null && "admin".equals(currentUser.getName()));
         orderManagement.addClickListener(e -> UI.getCurrent().navigate("orderManagement"));
 
-        MenuItem manageItem = contextMenu.addItem("Product Management");
+        MenuItem manageItem = contextMenu.addItem("商品管理");
         manageItem.setVisible(currentUser != null && "admin".equals(currentUser.getName()));
         manageItem.addClickListener(e -> UI.getCurrent().navigate("product"));
 
-        MenuItem logoutItem = contextMenu.addItem("Log out");
+        MenuItem logoutItem = contextMenu.addItem("登出");
         logoutItem.addClickListener(e -> handleLogout());
 
     }

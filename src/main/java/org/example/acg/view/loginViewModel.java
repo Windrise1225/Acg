@@ -168,12 +168,12 @@ public class loginViewModel extends VerticalLayout {
         tfPassword.setInvalid(false);
 
         if (StringUtils.isEmpty(tfName.getValue())) {
-            tfName.setErrorMessage("Please enter your username!");
+            tfName.setErrorMessage("请输入用户名!");
             tfName.setInvalid(true);
             return;
         }
         if (StringUtils.isEmpty(tfPassword.getValue())) {
-            tfPassword.setErrorMessage("Please enter your password!");
+            tfPassword.setErrorMessage("请输入密码!");
             tfPassword.setInvalid(true);
             return;
         }
@@ -184,11 +184,11 @@ public class loginViewModel extends VerticalLayout {
                 VaadinSession.getCurrent().setAttribute("user", user);
                 getUI().ifPresent(ui -> ui.navigate(""));
             } else {
-                tfPassword.setErrorMessage("Incorrect password!");
+                tfPassword.setErrorMessage("密码错误!");
                 tfPassword.setInvalid(true);
             }
         } else {
-            tfName.setErrorMessage("The user does not exist!");
+            tfName.setErrorMessage("未找到该用户!");
             tfName.setInvalid(true);
         }
     }

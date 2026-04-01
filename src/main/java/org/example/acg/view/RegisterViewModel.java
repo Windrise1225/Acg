@@ -72,7 +72,7 @@ public class RegisterViewModel extends VerticalLayout {
 
         cbSex.setItemLabelGenerator(SexEnum::getValue);
         cbSex.setItems(SexEnum.values());
-        cbSex.setPlaceholder("Please select gender");
+        cbSex.setPlaceholder("请选择性别！");
 
         addLabeledField(card, "Username", tfName, VaadinIcon.USER);
         addLabeledField(card, "Gender", cbSex, VaadinIcon.USER_HEART);
@@ -94,7 +94,7 @@ public class RegisterViewModel extends VerticalLayout {
                 .set("cursor", "pointer");
 
         // 6. 底部返回登录链接
-        backToLoginLink.setText("Do you already have an account? Go to login");
+        backToLoginLink.setText("已有账户吗？前往登录");
         backToLoginLink.getStyle()
                 .set("color", PRIMARY_COLOR)
                 .set("cursor", "pointer")
@@ -134,7 +134,7 @@ public class RegisterViewModel extends VerticalLayout {
 
         // 右侧输入框
         field.setWidthFull();
-        field.setPlaceholder("Please enter " + labelText);
+        field.setPlaceholder("请输入 " + labelText);
         if (icon != null) {
             field.setPrefixComponent(icon.create());
         }
@@ -163,7 +163,7 @@ public class RegisterViewModel extends VerticalLayout {
                 .set("padding-right", "10px");
 
         field.setWidthFull();
-        field.setPlaceholder("Please enter " + labelText);
+        field.setPlaceholder("请输入 " + labelText);
         if (icon != null) {
             field.setPrefixComponent(icon.create());
         }
@@ -193,7 +193,7 @@ public class RegisterViewModel extends VerticalLayout {
 
         combo.setWidthFull();
         // ComboBox 不需要 placeholder 如果已经有 item，但为了统一可以保留
-        combo.setPlaceholder("Please select " + labelText);
+        combo.setPlaceholder("请选择 " + labelText);
         if (icon != null) {
             combo.setPrefixComponent(icon.create());
         }
@@ -225,34 +225,34 @@ public class RegisterViewModel extends VerticalLayout {
         tfPassword.setInvalid(false);
 
         if (StringUtils.isEmpty(tfName.getValue())) {
-            tfName.setErrorMessage("Please enter your username!");
+            tfName.setErrorMessage("请输入用户名!");
             tfName.setInvalid(true);
             return;
         }
         if (cbSex.getValue() == null) {
-            cbSex.setErrorMessage("Please select gender!");
+            cbSex.setErrorMessage("请选择性别!");
             cbSex.setInvalid(true);
             return;
         }
         if (StringUtils.isEmpty(tfPhone.getValue())) {
-            tfPhone.setErrorMessage("Please enter your phone number!");
+            tfPhone.setErrorMessage("请输入手机号!");
             tfPhone.setInvalid(true);
             return;
         }
         if (StringUtils.isEmpty(tfEmail.getValue())) {
-            tfEmail.setErrorMessage("Please enter your email!");
+            tfEmail.setErrorMessage("请输入邮箱!");
             tfEmail.setInvalid(true);
             return;
         }
         if (StringUtils.isEmpty(tfPassword.getValue())) {
-            tfPassword.setErrorMessage("Please input a password!");
+            tfPassword.setErrorMessage("请输入密码!");
             tfPassword.setInvalid(true);
             return;
         }
 
         User user = userService.getUserByName(tfName.getValue());
         if (user != null) {
-            tfName.setErrorMessage("The user already exists!");
+            tfName.setErrorMessage("用户名已存在!");
             tfName.setInvalid(true);
             return;
         }
@@ -266,7 +266,7 @@ public class RegisterViewModel extends VerticalLayout {
 
         userService.insertUser(userNew);
 
-        MsgUtil.success("Registered successfully", Notification.Position.TOP_CENTER);
+        MsgUtil.success("注册成功!", Notification.Position.TOP_CENTER);
 
         clearTf();
         getUI().ifPresent(ui -> ui.navigate("login"));

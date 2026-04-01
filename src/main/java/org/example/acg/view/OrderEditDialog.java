@@ -90,10 +90,10 @@ public class OrderEditDialog extends Dialog {
         layout.add(tfOrderNumber, tfTotalPrice, tfCreateTime, tfCreateUser, cbStatus, btnLayout);
         add(layout);
 
-        chickBtn();
+        clickBtn();
     }
 
-    private void chickBtn() {
+    private void clickBtn() {
         btnConfirm.addClickListener(event -> {
             if (cbStatus.getValue() == null) {
                 cbStatus.setErrorMessage("请选择状态");

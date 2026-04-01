@@ -58,17 +58,17 @@ public class ProductDialog extends Dialog {
 
         VerticalLayout layout = new VerticalLayout();
         HorizontalLayout btnLayout = new HorizontalLayout();
-        btnCancel.setText("Cancel");
-        btnConfirm.setText("Confirm");
+        btnCancel.setText("取消");
+        btnConfirm.setText("确认");
         btnLayout.add(btnCancel, btnConfirm);
 
-        tfName.setLabel("Name");
+        tfName.setLabel("名称");
         tfName.setWidth("80%");
-        tfIntroduction.setLabel("Introduction");
+        tfIntroduction.setLabel("简介");
         tfIntroduction.setWidth("80%");
-        tfPrice.setLabel("Price");
+        tfPrice.setLabel("价格");
         tfPrice.setWidth("80%");
-        tfQuantity.setLabel("Quantity");
+        tfQuantity.setLabel("数量");
         tfQuantity.setWidth("80%");
 
         MemoryBuffer buffer = new MemoryBuffer();
@@ -101,28 +101,28 @@ public class ProductDialog extends Dialog {
             }
         });
 
-        chickBtn();
+        clickBtn();
     }
 
-    private void chickBtn() {
+    private void clickBtn() {
         btnConfirm.addClickListener(event -> {
             if (tfName.getValue().isEmpty()) {
-                tfName.setErrorMessage("Please enter the name");
+                tfName.setErrorMessage("请输入用户名：");
                 tfName.setInvalid(true);
                 return;
             }
             if (tfIntroduction.getValue().isEmpty()) {
-                tfIntroduction.setErrorMessage("Please enter a brief introduction");
+                tfIntroduction.setErrorMessage("请输入商品简介：");
                 tfIntroduction.setInvalid(true);
                 return;
             }
             if (tfPrice.getValue().isEmpty()) {
-                tfPrice.setErrorMessage("Please enter the price");
+                tfPrice.setErrorMessage("请输入价格：");
                 tfPrice.setInvalid(true);
                 return;
             }
             if (tfQuantity.getValue().isEmpty()) {
-                tfQuantity.setErrorMessage("Please enter the quantity");
+                tfQuantity.setErrorMessage("请输入数量");
                 tfQuantity.setInvalid(true);
                 return;
             }
@@ -132,7 +132,7 @@ public class ProductDialog extends Dialog {
 
             if (!isEdit) {
                 if (existingProduct != null) {
-                    tfName.setErrorMessage("The product already exists");
+                    tfName.setErrorMessage("该商品名称已存在！");
                     tfName.setInvalid(true);
                     return;
                 }
@@ -148,7 +148,7 @@ public class ProductDialog extends Dialog {
                 close();
             } else {
                 if (existingProduct != null && !existingProduct.getId().equals(editingProduct.getId())) {
-                    tfName.setErrorMessage("The product name already exists");
+                    tfName.setErrorMessage("该商品名称已存在！");
                     tfName.setInvalid(true);
                     return;
                 }
@@ -176,7 +176,7 @@ public class ProductDialog extends Dialog {
 
     public void setData(Product product) {
         if (product != null) {
-            setHeaderTitle("Modify the product");
+            setHeaderTitle("商品修改");
             editingProduct = product;
             tfName.setValue(product.getName());
             tfIntroduction.setValue(product.getIntroduction());
@@ -184,7 +184,7 @@ public class ProductDialog extends Dialog {
             tfQuantity.setValue(product.getQuantity().toString());
             uploadedFileName = new String[]{null};
         } else {
-            setHeaderTitle("Add product");
+            setHeaderTitle("商品添加");
             editingProduct = null;
             tfName.clear();
             tfIntroduction.clear();

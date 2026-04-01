@@ -388,15 +388,15 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
      */
     private void handleDeleteItem(Cart cart) {
         ConfirmDialog confirmDialog = new ConfirmDialog();
-        confirmDialog.setHeader("Delete product");
-        confirmDialog.setText("Are you sure you want to delete this product?");
-        confirmDialog.setConfirmText("Confirm");
-        confirmDialog.setCancelText("Cancel");
+        confirmDialog.setHeader("删除商品");
+        confirmDialog.setText("确定将此商品从购物车中移除吗?");
+        confirmDialog.setConfirmText("确认");
+        confirmDialog.setCancelText("取消");
         confirmDialog.setCancelable( true);
         confirmDialog.setOpened(true);
         confirmDialog.addConfirmListener(e -> {
             cartService.deleteById(cart.getId());
-            MsgUtil.success("Delete successfully", Notification.Position.TOP_CENTER);
+            MsgUtil.success("删除成功！", Notification.Position.TOP_CENTER);
             isDataLoaded = false;
             loadCartData();
         });
@@ -469,8 +469,8 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
             ConfirmDialog confirmDialog = new ConfirmDialog();
             confirmDialog.setHeader("结算");
             confirmDialog.setText("总价钱为：" + sumPrice + " 元，确定要付款吗？");
-            confirmDialog.setConfirmText("Confirm");
-            confirmDialog.setCancelText("Cancel");
+            confirmDialog.setConfirmText("确认");
+            confirmDialog.setCancelText("取消");
             confirmDialog.setCancelable( true);
             confirmDialog.setOpened(true);
             confirmDialog.addConfirmListener( confirmEvent ->  {
@@ -537,7 +537,7 @@ public class CartViewModel extends VerticalLayout implements BeforeEnterObserver
                 "flex-shrink: 0;";
         logoIcon.getElement().setProperty("style", iconStyle);
 
-        H2 logoText = new H2("Shopping Cart");
+        H2 logoText = new H2("购物车");
         logoText.getElement().setProperty("style", "font-size: 24px; font-weight: 700; margin: 0; color: #333; white-space: nowrap;");
         layout.add(logoIcon, logoText);
         return layout;
