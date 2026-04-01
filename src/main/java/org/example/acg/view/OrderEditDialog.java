@@ -8,6 +8,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.Setter;
 import org.example.acg.config.enums.OrderStatusEnum;
 import org.example.acg.entity.Order;
@@ -15,13 +16,12 @@ import org.example.acg.entity.User;
 import org.example.acg.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Scope("prototype")
-@Component
+@SpringComponent
 public class OrderEditDialog extends Dialog {
 
     @Autowired

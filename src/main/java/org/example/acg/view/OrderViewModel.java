@@ -36,6 +36,7 @@ public class OrderViewModel extends VerticalLayout implements BeforeEnterObserve
 
     public OrderViewModel() {
         setSizeFull();
+        loadData();
 
         HorizontalLayout navbar = createNavbar();
 

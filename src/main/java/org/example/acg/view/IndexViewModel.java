@@ -23,6 +23,8 @@ import org.example.acg.entity.Product;
 import org.example.acg.entity.User;
 import org.example.acg.service.CartService;
 import org.example.acg.service.ProductService;
+import org.example.acg.view.Product.ProductDialog;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -55,6 +57,9 @@ public class IndexViewModel extends VerticalLayout {
 
     // 包含导航、横幅和商品列表的可滚动主内容区
     private Div scrollableContent;
+
+    @Autowired
+    private ObjectProvider<ChangePasswordDialog> changePasswordDialog;
 
     /**
      * 构造函数：初始化页面结构和样式
@@ -526,6 +531,16 @@ public class IndexViewModel extends VerticalLayout {
 
         ContextMenu contextMenu = new ContextMenu(userBtn);
         contextMenu.setOpenOnClick(true);
+
+        MenuItem changePasswordItem = contextMenu.addItem("修改密码");
+        changePasswordItem.addClickListener(e -> {
+            ChangePasswordDialog dialog = changePasswordDialog.getIfAvailable();
+            if (dialog == null) return;
+
+            dialog.setData(currentUser);
+
+            dialog.open();
+        });
 
         MenuItem orderItem = contextMenu.addItem("订单");
         orderItem.setVisible(currentUser != null && !"admin".equals(currentUser.getName()));

@@ -19,4 +19,9 @@ public class UserService {
     public void insertUser(User user) {
         userMapper.insertUser(user);
     }
+
+    public boolean updateUser(User user){
+        int i = userMapper.updateUser(user);
+        return i > 0;
+    }
 }

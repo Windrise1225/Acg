@@ -9,5 +9,7 @@
     <insert id="insertUser" parameterType="org.example.acg.entity.User">
         INSERT INTO user (name, sex, phone, email, password, create_time, isDelete) VALUES (#{name}, #{sex}, #{phone}, #{email}, #{password}, NOW(), 0)
     </insert>
-
+    <update id="updateUser">
+        UPDATE user SET password = #{password} WHERE id = #{id}
+    </update>
 </mapper>

@@ -9,12 +9,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.Setter;
 import org.example.acg.entity.Product;
 import org.example.acg.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Scope("prototype")
-@Component
+@SpringComponent
 public class ProductDialog extends Dialog {
 
     @Autowired
