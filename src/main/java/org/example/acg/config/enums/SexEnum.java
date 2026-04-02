@@ -17,5 +17,13 @@ public enum SexEnum {
         this.value = value;
     }
 
+    public static SexEnum fromCode(String code) {
+        for (SexEnum status : SexEnum.values()) {
+            if (status.getCode().equals(code)) {
+                return status;
+            }
+        }
+        return null;
+    }
 
 }

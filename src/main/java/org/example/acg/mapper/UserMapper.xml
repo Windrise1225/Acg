@@ -2,8 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.acg.mapper.UserMapper">
 
+    <select id="list">
+        SELECT * FROM user
+    </select>
+
+    <select id="likeListByName">
+        SELECT * FROM user WHERE name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
     <select id="getUserByName" resultType="org.example.acg.entity.User">
         SELECT * FROM user WHERE name = #{name} and isDelete = 0
+    </select>
+
+    <select id="getUserById">
+        SELECT * FROM user WHERE id = #{id}
     </select>
     
     <insert id="insertUser" parameterType="org.example.acg.entity.User">
@@ -11,5 +23,13 @@
     </insert>
     <update id="updateUser">
         UPDATE user SET password = #{password} WHERE id = #{id}
+    </update>
+
+    <update id="deleteUser">
+        UPDATE user SET isDelete = 1 WHERE id = #{id}
+    </update>
+
+    <update id="replyUser">
+        UPDATE user SET isDelete = 0 WHERE id = #{id}
     </update>
 </mapper>

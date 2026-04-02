@@ -542,6 +542,10 @@ public class IndexViewModel extends VerticalLayout {
             dialog.open();
         });
 
+        MenuItem userManagement = contextMenu.addItem("用户管理");
+        userManagement.setVisible(currentUser != null && "admin".equals(currentUser.getName()));
+        userManagement.addClickListener(e -> UI.getCurrent().navigate("userManagement"));
+
         MenuItem orderItem = contextMenu.addItem("订单");
         orderItem.setVisible(currentUser != null && !"admin".equals(currentUser.getName()));
         orderItem.addClickListener(e -> UI.getCurrent().navigate("order"));
