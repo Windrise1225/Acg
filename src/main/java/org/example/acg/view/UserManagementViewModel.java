@@ -55,6 +55,8 @@ public class UserManagementViewModel extends VerticalLayout {
             String value = tfUsername.getValue();
             if (value != null && !value.isEmpty()){
                 grid.setItems(userService.likeListByName(value));
+            }else{
+                refreshGrid();
             }
         });
 
