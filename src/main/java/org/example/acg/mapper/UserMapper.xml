@@ -32,4 +32,15 @@
     <update id="replyUser">
         UPDATE user SET isDelete = 0 WHERE id = #{id}
     </update>
+    <insert id="save" parameterType="org.example.acg.entity.User">
+        INSERT INTO user (id, name, sex, phone, email, password, create_time, isDelete)
+        VALUES
+        (#{id}, #{name}, #{sex}, #{phone}, #{email}, #{password}, NOW(), 0)
+        ON DUPLICATE KEY UPDATE
+        name = VALUES(name),
+        sex = VALUES(sex),
+        phone = VALUES(phone),
+        email = VALUES(email),
+        password = VALUES(password)
+    </insert>
 </mapper>

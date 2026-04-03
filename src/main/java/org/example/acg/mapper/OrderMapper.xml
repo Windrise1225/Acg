@@ -4,6 +4,7 @@
 
     <select id="list" resultType="org.example.acg.entity.Order">
         SELECT * FROM `order`
+        ORDER BY create_time DESC
     </select>
 
     <select id="listByUserId" resultType="org.example.acg.entity.Order">

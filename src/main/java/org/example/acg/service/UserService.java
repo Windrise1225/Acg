@@ -49,4 +49,8 @@ public class UserService {
         int i = userMapper.replyUser(id);
         return i > 0;
     }
+    public boolean save(User user){
+        int i = userMapper.save(user);
+        return i > 0;
+    }
 }

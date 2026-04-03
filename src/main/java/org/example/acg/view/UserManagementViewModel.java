@@ -17,6 +17,8 @@ import org.example.acg.entity.User;
 import org.example.acg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +34,8 @@ public class UserManagementViewModel extends VerticalLayout {
 
     @Autowired
     private UserService userService;
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserManagementViewModel() {
         createGrid();
@@ -53,9 +57,9 @@ public class UserManagementViewModel extends VerticalLayout {
 
         btnSearch.addClickListener(e -> {
             String value = tfUsername.getValue();
-            if (value != null && !value.isEmpty()){
+            if (value != null && !value.isEmpty()) {
                 grid.setItems(userService.likeListByName(value));
-            }else{
+            } else {
                 refreshGrid();
             }
         });
@@ -63,16 +67,16 @@ public class UserManagementViewModel extends VerticalLayout {
         Button btnDelete = new Button("删除");
         btnDelete.setIcon(VaadinIcon.TRASH.create());
         btnDelete.getStyle().setBackgroundColor("#e37878")
-                        .setColor("white");
+                .setColor("white");
         btnDelete.addClickListener(e -> {
             User user = grid.asSingleSelect().getValue();
-            if (user == null){
+            if (user == null) {
                 MsgUtil.warning("请选择要删除的用户！", Notification.Position.TOP_CENTER);
                 return;
             }
             User userById = userService.getUserById(user.getId());
-            if (userById !=  null){
-                if (userById.getIsDelete() == 1){
+            if (userById != null) {
+                if (userById.getIsDelete() == 1) {
                     MsgUtil.warning("此用户已被删除！", Notification.Position.TOP_CENTER);
                     return;
                 }
@@ -82,7 +86,7 @@ public class UserManagementViewModel extends VerticalLayout {
             confirm.setText("确定要删除此用户吗?");
             confirm.setConfirmText("确认");
             confirm.setCancelText("取消");
-            confirm.setCancelable( true);
+            confirm.setCancelable(true);
             confirm.setOpened(true);
             confirm.addConfirmListener(log -> {
                 if (userService.deleteUser(user.getId())) {
@@ -98,13 +102,13 @@ public class UserManagementViewModel extends VerticalLayout {
         btnReply.getStyle().setBackgroundColor("#4caf50");
         btnReply.addClickListener(e -> {
             User user = grid.asSingleSelect().getValue();
-            if (user == null){
+            if (user == null) {
                 MsgUtil.warning("请选择要恢复的用户！", Notification.Position.TOP_CENTER);
                 return;
             }
             User userById = userService.getUserById(user.getId());
-            if (userById !=  null){
-                if (userById.getIsDelete() == 0){
+            if (userById != null) {
+                if (userById.getIsDelete() == 0) {
                     MsgUtil.warning("此用户未被删除！", Notification.Position.TOP_CENTER);
                     return;
                 }
@@ -114,7 +118,7 @@ public class UserManagementViewModel extends VerticalLayout {
             confirm.setText("确定要恢复此用户吗?");
             confirm.setConfirmText("确认");
             confirm.setCancelText("取消");
-            confirm.setCancelable( true);
+            confirm.setCancelable(true);
             confirm.setOpened(true);
             confirm.addConfirmListener(log -> {
                 if (userService.replyUser(user.getId())) {
@@ -124,7 +128,36 @@ public class UserManagementViewModel extends VerticalLayout {
             });
         });
 
-        layout.add(tfUsername, btnSearch, btnDelete, btnReply);
+        Button btnResetPassword = new Button("重置密码");
+        btnResetPassword.setIcon(VaadinIcon.LOCK.create());
+        btnResetPassword.getStyle()
+                .setBackgroundColor("#4caf50")
+                .setColor("white");
+        btnResetPassword.addClickListener(e -> {
+            User user = grid.asSingleSelect().getValue();
+            if (user == null) {
+                MsgUtil.warning("请选择要重置密码的用户！", Notification.Position.TOP_CENTER);
+                return;
+            }
+            ConfirmDialog confirm = new ConfirmDialog();
+            confirm.setHeader("提示");
+            confirm.setText("确定要重置此用户的密码吗?");
+            confirm.setConfirmText("确认");
+            confirm.setCancelText("取消");
+            confirm.setCancelable(true);
+            confirm.setOpened(true);
+            confirm.addConfirmListener(log -> {
+                String encode = passwordEncoder.encode("00000000");
+                user.setPassword(encode);
+                if (userService.save(user)) {
+                    MsgUtil.success("重置密码成功！", Notification.Position.TOP_CENTER);
+                    refreshGrid();
+                }
+            });
+        });
+
+
+        layout.add(tfUsername, btnSearch, btnDelete, btnReply, btnResetPassword);
 
         add(layout, grid);
     }
@@ -161,12 +194,12 @@ public class UserManagementViewModel extends VerticalLayout {
         ).setHeader("创建时间").setAutoWidth(true);
         grid.addColumn(user -> {
             int isDelete = user.getIsDelete();
-            if (isDelete == 0){
+            if (isDelete == 0) {
                 return "正常使用";
-            }else if (isDelete == 1){
+            } else if (isDelete == 1) {
                 return "已删除";
             }
             return "未知";
-        }).setHeader("状态").setAutoWidth( true);
+        }).setHeader("状态").setAutoWidth(true);
     }
 }

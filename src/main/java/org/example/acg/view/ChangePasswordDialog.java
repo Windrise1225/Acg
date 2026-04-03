@@ -107,13 +107,6 @@ public class ChangePasswordDialog extends Dialog {
             return;
         }
 
-        boolean isOldPasswordCorrect = passwordEncoder.matches(oldPassword, currentUser.getPassword());
-        if (!isOldPasswordCorrect) {
-            tfOldPassword.setInvalid(true);
-            tfOldPassword.setErrorMessage("旧密码验证失败");
-            return;
-        }
-
         currentUser.setPassword(passwordEncoder.encode(newPassword));
         boolean isSuccess = userService.updateUser(currentUser);
 

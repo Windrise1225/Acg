@@ -17,6 +17,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.example.acg.entity.User;
 import org.example.acg.service.UserService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,11 +30,14 @@ public class loginViewModel extends VerticalLayout {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ObjectProvider<ForgotPasswordDialog> forgotPasswordDialog;
 
     // 组件定义
     private final TextField tfName = new TextField();
     private final PasswordField tfPassword = new PasswordField();
     private final Span tipLink = new Span();
+    private final Span tipForgotPassword = new Span();
     private final Button btnConfirm = new Button("登录");
 
     // 颜色常量
@@ -86,12 +90,20 @@ public class loginViewModel extends VerticalLayout {
         tipLink.getStyle()
                 .set("color", PRIMARY_COLOR)
                 .set("cursor", "pointer")
-                .set("font-size", "14px")
-                .set("margin-top", "10px");
+                .set("font-size", "14px");
 
         // 链接 hover 效果
         tipLink.getElement().addEventListener("mouseenter", e -> tipLink.getStyle().set("color", SECONDARY_COLOR));
         tipLink.getElement().addEventListener("mouseleave", e -> tipLink.getStyle().set("color", PRIMARY_COLOR));
+
+        tipForgotPassword.setText("忘记密码？");
+        tipForgotPassword.getStyle()
+                .set("color", PRIMARY_COLOR)
+                .set("cursor", "pointer")
+                .set("font-size", "14px");
+
+        tipForgotPassword.getElement().addEventListener("mouseenter", e -> tipForgotPassword.getStyle().set("color", SECONDARY_COLOR));
+        tipForgotPassword.getElement().addEventListener("mouseleave", e -> tipForgotPassword.getStyle().set("color", PRIMARY_COLOR));
 
         addLabeledField(card, "用户名", tfName, VaadinIcon.USER);
         addLabeledField(card, "密码", tfPassword, VaadinIcon.LOCK);
@@ -99,6 +111,8 @@ public class loginViewModel extends VerticalLayout {
         card.add(btnConfirm);
 
         card.add(tipLink);
+
+        card.add(tipForgotPassword);
 
         add(card);
     }
@@ -165,6 +179,12 @@ public class loginViewModel extends VerticalLayout {
         btnConfirm.addClickListener(event -> login());
         tfPassword.addKeyPressListener(Key.ENTER, event -> login());
         tipLink.addClickListener(event -> UI.getCurrent().navigate("register"));
+
+        tipForgotPassword.addClickListener(e ->{
+            ForgotPasswordDialog dialog = forgotPasswordDialog.getIfAvailable();
+            if (dialog == null) return;
+            dialog.open();
+        });
     }
 
     private void login() {
